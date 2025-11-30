@@ -13,7 +13,7 @@ register_mjlab_task(
 )
 
 register_mjlab_task(
-  task_id="Mjlab-Tracking-Flat-Unitree-G1-No-State-Estimation",
+  task_id="Mjlab-Tracking-Flat-Unitree-G1-No-State-Estimation-LocalObs",
   env_cfg=unitree_g1_flat_tracking_env_cfg(has_state_estimation=False),
   play_env_cfg=unitree_g1_flat_tracking_env_cfg(has_state_estimation=False, play=True),
   rl_cfg=unitree_g1_tracking_ppo_runner_cfg(),
