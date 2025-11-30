@@ -31,7 +31,7 @@ class _OnnxMotionPolicyExporter(_OnnxPolicyExporter):
     self, env: ManagerBasedRlEnv, actor_critic, normalizer=None, verbose=False
   ):
     super().__init__(actor_critic, normalizer, verbose)
-    cmd = cast(MotionCommand, env.command_manager.get_term("motion"))
+    cmd = cast(MotionCommand, env.command_manager.get_term("motion_local"))
 
     self.joint_pos = cmd.motion.joint_pos.to("cpu")
     self.joint_vel = cmd.motion.joint_vel.to("cpu")
@@ -98,7 +98,7 @@ def attach_onnx_metadata(
   metadata = get_base_metadata(env, run_path)
 
   # Add tracking-specific metadata.
-  motion_term = env.command_manager.get_term("motion")
+  motion_term = env.command_manager.get_term("motion_local")
   assert isinstance(motion_term, MotionCommand)
   motion_term_cfg = motion_term.cfg
   metadata.update(
