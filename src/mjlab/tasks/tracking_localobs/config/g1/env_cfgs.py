@@ -39,8 +39,7 @@ def unitree_g1_flat_tracking_env_cfg(
   assert cfg.commands is not None
   base_cmd = cfg.commands["motion"]
   assert isinstance(base_cmd, MotionCommandCfg)
-  cfg.commands.pop("motion")
-  cfg.commands["motion_local"] = MotionCommandLocalCfg(
+  cfg.commands["motion"] = MotionCommandLocalCfg(
     motion_file=base_cmd.motion_file,
     anchor_body_name=base_cmd.anchor_body_name,
     body_names=base_cmd.body_names,
@@ -56,7 +55,7 @@ def unitree_g1_flat_tracking_env_cfg(
     sampling_mode=base_cmd.sampling_mode,
     viz=base_cmd.viz,
   )
-  motion_cmd = cfg.commands["motion_local"]
+  motion_cmd = cfg.commands["motion"]
   assert isinstance(motion_cmd, MotionCommandLocalCfg)
   motion_cmd.anchor_body_name = "torso_link"
   motion_cmd.body_names = (
@@ -89,12 +88,6 @@ def unitree_g1_flat_tracking_env_cfg(
   )
 
   cfg.viewer.body_name = "torso_link"
-
-  for group_name in ["policy", "critic"]:
-    terms = cfg.observations[group_name].terms
-    for k, t in terms.items():
-        if hasattr(t, "params") and "command_name" in t.params:
-            t.params["command_name"] = "motion_local"
 
   # Modify observations if we don't have state estimation.
   if not has_state_estimation:
