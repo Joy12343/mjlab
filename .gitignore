@@ -14,3 +14,4 @@ artifacts/
 .venv/
 render_robots.py
 train.sh
+train_localobs.sh

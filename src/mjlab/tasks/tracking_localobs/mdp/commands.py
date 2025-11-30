@@ -53,10 +53,6 @@ class MotionLoader:
 
 class MotionCommandLocal(BaseMotionCommand):
 
-  def __init__(self, cfg, env):
-    print("### new version ###")
-    super().__init__(cfg, env)
-
   @property
   def command(self) -> torch.Tensor:
       num_bodies = len(self.cfg.body_names)
