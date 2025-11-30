@@ -89,6 +89,12 @@ def unitree_g1_flat_tracking_env_cfg(
 
   cfg.viewer.body_name = "torso_link"
 
+  print("==== DEBUG: In env_cfgs.py ====")
+  print("Replaced command['motion'] with:", cfg.commands["motion"])
+  print("Type:", type(cfg.commands["motion"]))
+  print("Class_type:", getattr(cfg.commands["motion"], "class_type", None))
+  print("================================")
+
   # Modify observations if we don't have state estimation.
   if not has_state_estimation:
     new_policy_terms = {
