@@ -108,6 +108,16 @@ def unitree_g1_flat_tracking_env_cfg(
       enable_corruption=True,
     )
 
+  policy_terms = cfg.observations["policy"].terms
+  policy_terms.pop("joint_pos", None)
+  policy_terms.pop("joint_vel", None)
+
+  critic_terms = cfg.observations["critic"].terms
+  critic_terms.pop("joint_pos", None)
+  critic_terms.pop("joint_vel", None)
+  critic_terms.pop("body_pos", None)
+  critic_terms.pop("body_ori", None)
+
   # Apply play mode overrides.
   if play:
     # Effectively infinite episode length.
