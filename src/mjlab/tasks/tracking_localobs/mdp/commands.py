@@ -12,7 +12,6 @@ from mjlab.utils.lab_api.math import (
   subtract_frame_transforms,
 )
 
-
 class MotionLoader:
   def __init__(
     self, motion_file: str, body_indexes: torch.Tensor, device: str = "cpu"
@@ -54,34 +53,38 @@ class MotionLoader:
 
 class MotionCommandLocal(BaseMotionCommand):
 
-    @property
-    def command(self) -> torch.Tensor:
-        num_bodies = len(self.cfg.body_names)
+  def __init__(self, cfg, env):
+    print("### new version ###")
+    super().__init__(cfg, env)
 
-        # body position/orientation relative to anchor frame
-        pos_b, ori_b_quat = subtract_frame_transforms(
-            self.robot_anchor_pos_w[:, None, :].repeat(1, num_bodies, 1),
-            self.robot_anchor_quat_w[:, None, :].repeat(1, num_bodies, 1),
-            self.body_pos_w,
-            self.body_quat_w,
-        )
-        pos_b = pos_b.reshape(self.num_envs, -1)
+  @property
+  def command(self) -> torch.Tensor:
+      num_bodies = len(self.cfg.body_names)
 
-        # convert quaternion to 2-column orientation representation
-        ori_mat = matrix_from_quat(ori_b_quat)
-        ori_b = ori_mat[..., :2].reshape(self.num_envs, -1)
+      # body position/orientation relative to anchor frame
+      pos_b, ori_b_quat = subtract_frame_transforms(
+          self.robot_anchor_pos_w[:, None, :].repeat(1, num_bodies, 1),
+          self.robot_anchor_quat_w[:, None, :].repeat(1, num_bodies, 1),
+          self.body_pos_w,
+          self.body_quat_w,
+      )
+      pos_b = pos_b.reshape(self.num_envs, -1)
 
-        # transform body velocities into anchor frame
-        rotm_T = matrix_from_quat(self.robot_anchor_quat_w).transpose(-1, -2)
+      # convert quaternion to 2-column orientation representation
+      ori_mat = matrix_from_quat(ori_b_quat)
+      ori_b = ori_mat[..., :2].reshape(self.num_envs, -1)
 
-        lin_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_lin_vel_w)
-        lin_vel_b = lin_vel_b.reshape(self.num_envs, -1)
+      # transform body velocities into anchor frame
+      rotm_T = matrix_from_quat(self.robot_anchor_quat_w).transpose(-1, -2)
 
-        ang_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_ang_vel_w)
-        ang_vel_b = ang_vel_b.reshape(self.num_envs, -1)
+      lin_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_lin_vel_w)
+      lin_vel_b = lin_vel_b.reshape(self.num_envs, -1)
 
-        return torch.cat([pos_b, ori_b, lin_vel_b, ang_vel_b], dim=1)
+      ang_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_ang_vel_w)
+      ang_vel_b = ang_vel_b.reshape(self.num_envs, -1)
+
+      return torch.cat([pos_b, ori_b, lin_vel_b, ang_vel_b], dim=1)
 
 @dataclass(kw_only=True)
 class MotionCommandLocalCfg(BaseCfg):
-    class_type = MotionCommandLocal
+    class_type: type = MotionCommandLocal
