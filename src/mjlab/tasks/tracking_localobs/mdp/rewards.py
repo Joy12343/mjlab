@@ -7,7 +7,7 @@ import torch
 from mjlab.sensor import ContactSensor
 from mjlab.utils.lab_api.math import quat_error_magnitude
 
-from .commands import MotionCommand
+from .commands import MotionCommandLocal as MotionCommand
 
 if TYPE_CHECKING:
   from mjlab.envs import ManagerBasedRlEnv

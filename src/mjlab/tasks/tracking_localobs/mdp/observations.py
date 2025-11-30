@@ -9,7 +9,7 @@ from mjlab.utils.lab_api.math import (
   subtract_frame_transforms,
 )
 
-from .commands import MotionCommand
+from .commands import MotionCommandLocal as MotionCommand
 
 if TYPE_CHECKING:
   from mjlab.envs import ManagerBasedRlEnv

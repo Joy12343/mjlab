@@ -6,7 +6,7 @@ import torch
 
 from mjlab.utils.lab_api.math import quat_apply_inverse
 
-from .commands import MotionCommand
+from .commands import MotionCommandLocal as MotionCommand
 from .rewards import _get_body_indexes
 
 if TYPE_CHECKING:
