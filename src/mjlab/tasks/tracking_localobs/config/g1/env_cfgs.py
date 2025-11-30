@@ -109,8 +109,6 @@ def unitree_g1_flat_tracking_env_cfg(
   critic_terms = cfg.observations["critic"].terms
   critic_terms.pop("joint_pos", None)
   critic_terms.pop("joint_vel", None)
-  critic_terms.pop("body_pos", None)
-  critic_terms.pop("body_ori", None)
 
   # Apply play mode overrides.
   if play:
