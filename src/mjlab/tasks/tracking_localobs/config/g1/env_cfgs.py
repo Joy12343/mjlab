@@ -54,6 +54,7 @@ def unitree_g1_flat_tracking_env_cfg(
     adaptive_alpha=base_cmd.adaptive_alpha,
     sampling_mode=base_cmd.sampling_mode,
     viz=base_cmd.viz,
+    debug_vis=base_cmd.debug_vis,
   )
   motion_cmd = cfg.commands["motion"]
   assert isinstance(motion_cmd, MotionCommandLocalCfg)

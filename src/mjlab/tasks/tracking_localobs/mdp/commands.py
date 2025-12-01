@@ -5,8 +5,8 @@ from dataclasses import dataclass
 import numpy as np
 import torch
 
-from mjlab.tasks.tracking.mdp.commands import MotionCommand as BaseMotionCommand
-from mjlab.tasks.tracking.mdp.commands import MotionCommandCfg as BaseCfg
+from mjlab.tasks.tracking.mdp.commands import MotionCommand
+from mjlab.tasks.tracking.mdp.commands import MotionCommandCfg
 from mjlab.utils.lab_api.math import (
   matrix_from_quat,
   subtract_frame_transforms,
@@ -51,7 +51,7 @@ class MotionLoader:
     return self._body_ang_vel_w[:, self._body_indexes]
 
 
-class MotionCommandLocal(BaseMotionCommand):
+class MotionCommandLocal(MotionCommand):
 
   @property
   def command(self) -> torch.Tensor:
@@ -82,5 +82,5 @@ class MotionCommandLocal(BaseMotionCommand):
       return torch.cat([pos_b, ori_b, lin_vel_b, ang_vel_b], dim=1)
 
 @dataclass(kw_only=True)
-class MotionCommandLocalCfg(BaseCfg):
+class MotionCommandLocalCfg(MotionCommandCfg):
     class_type: type = MotionCommandLocal
