@@ -1,5 +1,50 @@
 ![Project banner](docs/static/mjlab-banner.jpg)
 
+
+# The mjlab Test
+
+## 1. Overview
+This repository contains my implementation for the mjlab Technical Test.  
+The objective was to reproduce the BeyondMimic-style motion tracking policy on the Unitree G1 robot and extend it with a modified observation space (body link poses and velocities in the robot's local frame).
+I successfully:
+- Set up mjlab + MuJoCo-Warp
+- Trained a baseline tracking policy using LAFAN1 `dance1_subject1`
+- Implemented a new tracking task with a modified observation space
+- Trained and evaluated both policies
+- Compared performance through metrics and rollout videos
+
+---
+
+## 2. Results Summary
+
+### Rollout Videos
+- **Baseline Policy Rollout:** [docs/static/baseline.mp4](docs/static/baseline.mp4)
+- **Modified Obs Policy Rollout:** [docs/static/bonus.mp4](docs/static/bonus.mp4)  
+
+### Mean Reward Training Curves
+- Baseline training curves: ![curve1](docs/static/baseline_training_curve.png)
+- Modified observation training curves: ![curve2](docs/static/bonus_training_curve.png)
+
+### Comparison
+
+| Metric | Baseline | Modified Obs |
+|--------|----------|--------------|
+| Mean reward | 34.513155 | 18.718284 |
+| Body pos error | 0.042367 | 0.096465 |
+| Body ori error | 0.156896 | 0.343548 |
+| Joint pos error | 0.640096 | 1.240289 |
+| Episode length | 495.52 | 425.38 |
+
+## 3. How to Run
+
+1. Set up for Motion Imitation following the original repo
+
+2. Run
+```bash
+uv run train Mjlab-Tracking-Flat-Unitree-G1-LocalObs --registry-name your-org/motions/motion-name --env.scene.num-envs 4096 
+```
+
+
 # mjlab
 
 <p align="left">
