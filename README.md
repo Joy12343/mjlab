@@ -13,9 +13,11 @@ I successfully:
 - Trained and evaluated both policies
 - Compared performance through metrics and rollout videos
 
----
+## 2. Modified Observation Space (Bonus Task)
 
-## 2. Results Summary
+For the bonus task, I replaced the default joint-space motion command with a Cartesian, link-based representation expressed entirely in the robot’s local frame. I implemented a new `MotionCommandLocal` that computes each body link’s position, a compact 2-column orientation representation, and linear/angular velocities by subtracting the anchor transform and projecting all quantities into the anchor frame. The environment config swaps this command in, removes all `joint_pos` and `joint_vel` observations, and keeps the rest of the tracking pipeline unchanged. This yields a joint-invariant, geometry-based observation intended to encourage more general and link-based tracking, though it produced lower tracking accuracy in this setting.
+
+## 3. Results
 
 ### Rollout Videos
 - **Baseline Policy Rollout:** [docs/static/baseline.mp4](docs/static/baseline.mp4)
@@ -35,15 +37,18 @@ I successfully:
 | Joint pos error | 0.640096 | 1.240289 |
 | Episode length | 495.52 | 425.38 |
 
-## 3. How to Run
+## 4. How to Run
 
-1. Set up for Motion Imitation following the original repo
+1. Follow the [mjlab documentation](https://github.com/mujocolab/mjlab) to install MuJoCo-Warp and set up motion imitation
 
-2. Run
+2. Train and Evaluate
 ```bash
-uv run train Mjlab-Tracking-Flat-Unitree-G1-LocalObs --registry-name your-org/motions/motion-name --env.scene.num-envs 4096 
+uv run train Mjlab-Tracking-Flat-Unitree-G1-LocalObs --registry-name your-org/motions/motion-name --env.scene.num-envs 4096
+
+uv run play Mjlab-Tracking-Flat-Unitree-G1-LocalObs --wandb-run-path your-org/mjlab/run-id 
 ```
 
+## 5. Discussion
 
 # mjlab
 
