@@ -26,6 +26,8 @@ For the bonus task, I replaced the default joint-space motion command with a Car
 ### Mean Reward Training Curves
 - Baseline training curves: ![curve1](docs/static/baseline_training_curve.png)
 - Modified observation training curves: ![curve2](docs/static/bonus_training_curve.png)
+*Note: The training curve is split into two runs due to limited Slurm GPU time. The first run trained for ~6 hours before terminating, and I resumed training in a second run.
+
 
 ### Comparison
 
