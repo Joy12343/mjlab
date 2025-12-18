@@ -57,8 +57,8 @@ class MotionCommandLocal(MotionCommand):
   def command(self) -> torch.Tensor:
       num_bodies = len(self.cfg.body_names)
 
-      # body position/orientation relative to anchor frame
-      pos_b, ori_b_quat = subtract_frame_transforms(
+      # body position relative to anchor frame
+      pos_b, _ = subtract_frame_transforms(
           self.robot_anchor_pos_w[:, None, :].repeat(1, num_bodies, 1),
           self.robot_anchor_quat_w[:, None, :].repeat(1, num_bodies, 1),
           self.body_pos_w,
@@ -66,20 +66,13 @@ class MotionCommandLocal(MotionCommand):
       )
       pos_b = pos_b.reshape(self.num_envs, -1)
 
-      # convert quaternion to 2-column orientation representation
-      ori_mat = matrix_from_quat(ori_b_quat)
-      ori_b = ori_mat[..., :2].reshape(self.num_envs, -1)
-
-      # transform body velocities into anchor frame
+      # transform body linear velocities into anchor frame
       rotm_T = matrix_from_quat(self.robot_anchor_quat_w).transpose(-1, -2)
 
       lin_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_lin_vel_w)
       lin_vel_b = lin_vel_b.reshape(self.num_envs, -1)
 
-      ang_vel_b = torch.einsum("bij,bmj->bmi", rotm_T, self.body_ang_vel_w)
-      ang_vel_b = ang_vel_b.reshape(self.num_envs, -1)
-
-      return torch.cat([pos_b, ori_b, lin_vel_b, ang_vel_b], dim=1)
+      return torch.cat([pos_b, lin_vel_b], dim=1)
 
 @dataclass(kw_only=True)
 class MotionCommandLocalCfg(MotionCommandCfg):
